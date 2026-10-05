@@ -31,6 +31,18 @@ namespace DreamLayer.SpriteImporter
             public FilterMode Filter = FilterMode.Bilinear;
             /// <summary>Alpha above this counts as part of the character when measuring.</summary>
             public byte AlphaThreshold = 10;
+            /// <summary>
+            /// First frame of the clip (0-based). Sprite jobs often open with the reference pose easing
+            /// into the action, so a loop should start after it.
+            /// </summary>
+            public int FirstFrame;
+            /// <summary>Frames in the clip from FirstFrame; 0 = through the last frame.</summary>
+            public int FrameCount;
+            /// <summary>
+            /// Clip length in seconds, keeping DreamLayer's relative frame timing; 0 keeps the exported
+            /// timing. Exported durations follow the source video's sampling, which is rarely game speed.
+            /// </summary>
+            public float TargetSeconds;
         }
 
         public sealed class Result
@@ -137,7 +149,16 @@ namespace DreamLayer.SpriteImporter
                 : throw new InvalidDataException("Sprite " + f.Name + " missing after import")).ToArray();
 
             string clipPath = $"{assetFolder}/{name}.anim";
-            var clip = BuildClip(sprites, atlas, options.Loop ?? atlas.Loops);
+            int first = Mathf.Clamp(options.FirstFrame, 0, sprites.Length - 1);
+            int count = options.FrameCount > 0 ? Mathf.Min(options.FrameCount, sprites.Length - first) : sprites.Length - first;
+            var clipSprites = sprites.Skip(first).Take(count).ToArray();
+            var durations = atlas.FrameDurationsMs.Skip(first).Take(count).Select(d => (float)d).ToArray();
+            if (options.TargetSeconds > 0f)
+            {
+                float scale = options.TargetSeconds * 1000f / durations.Sum();
+                durations = durations.Select(d => d * scale).ToArray();
+            }
+            var clip = BuildClip(clipSprites, durations, options.Loop ?? atlas.Loops);
             var existing = AssetDatabase.LoadAssetAtPath<AnimationClip>(clipPath);
             if (existing != null)
             {
@@ -168,7 +189,11 @@ namespace DreamLayer.SpriteImporter
         /// its full duration. Unity reports a sprite clip's length as the last key time plus one frame,
         /// so the closing key sits one frame early to make the clip exactly as long as DreamLayer's timing.
         /// </summary>
-        public static AnimationClip BuildClip(IReadOnlyList<Sprite> sprites, DreamLayerAtlas atlas, bool loop)
+        public static AnimationClip BuildClip(IReadOnlyList<Sprite> sprites, DreamLayerAtlas atlas, bool loop) =>
+            BuildClip(sprites, atlas.FrameDurationsMs.Select(d => (float)d).ToArray(), loop);
+
+        /// <summary>Builds a clip from sprites and per-frame durations in milliseconds.</summary>
+        public static AnimationClip BuildClip(IReadOnlyList<Sprite> sprites, IReadOnlyList<float> durationsMs, bool loop)
         {
             const float frameRate = 60f;
             var clip = new AnimationClip { frameRate = frameRate };
@@ -177,7 +202,7 @@ namespace DreamLayer.SpriteImporter
             for (int i = 0; i < sprites.Count; i++)
             {
                 keys.Add(new ObjectReferenceKeyframe { time = t, value = sprites[i] });
-                t += atlas.FrameDurationsMs[i] / 1000f;
+                t += durationsMs[i] / 1000f;
             }
             float closing = t - 1f / frameRate;
             if (closing > keys[keys.Count - 1].time + 1e-4f)
