@@ -163,20 +163,27 @@ namespace DreamLayer.SpriteImporter
             };
         }
 
-        /// <summary>One keyframe per frame at its exact start time, plus a closing key so the last frame holds its full duration.</summary>
+        /// <summary>
+        /// One keyframe per frame at its exact start time, plus a closing key so the last frame holds
+        /// its full duration. Unity reports a sprite clip's length as the last key time plus one frame,
+        /// so the closing key sits one frame early to make the clip exactly as long as DreamLayer's timing.
+        /// </summary>
         public static AnimationClip BuildClip(IReadOnlyList<Sprite> sprites, DreamLayerAtlas atlas, bool loop)
         {
-            var clip = new AnimationClip { frameRate = 60f };
-            var keys = new ObjectReferenceKeyframe[sprites.Count + 1];
+            const float frameRate = 60f;
+            var clip = new AnimationClip { frameRate = frameRate };
+            var keys = new List<ObjectReferenceKeyframe>(sprites.Count + 1);
             float t = 0f;
             for (int i = 0; i < sprites.Count; i++)
             {
-                keys[i] = new ObjectReferenceKeyframe { time = t, value = sprites[i] };
+                keys.Add(new ObjectReferenceKeyframe { time = t, value = sprites[i] });
                 t += atlas.FrameDurationsMs[i] / 1000f;
             }
-            keys[sprites.Count] = new ObjectReferenceKeyframe { time = t, value = sprites[sprites.Count - 1] };
+            float closing = t - 1f / frameRate;
+            if (closing > keys[keys.Count - 1].time + 1e-4f)
+                keys.Add(new ObjectReferenceKeyframe { time = closing, value = sprites[sprites.Count - 1] });
             var binding = EditorCurveBinding.PPtrCurve("", typeof(SpriteRenderer), "m_Sprite");
-            AnimationUtility.SetObjectReferenceCurve(clip, binding, keys);
+            AnimationUtility.SetObjectReferenceCurve(clip, binding, keys.ToArray());
             var settings = AnimationUtility.GetAnimationClipSettings(clip);
             settings.loopTime = loop;
             AnimationUtility.SetAnimationClipSettings(clip, settings);

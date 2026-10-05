@@ -1,0 +1,21 @@
+{
+  "checks": [
+    {"check": "walk: one sprite per atlas frame", "ok": true, "detail": "7 sprites / 7 frames"},
+    {"check": "walk: sprite rects match atlas", "ok": true, "detail": "cell 128x128"},
+    {"check": "walk: one shared ground pivot", "ok": true, "detail": "pivot 0.5,0.008"},
+    {"check": "walk: clip length equals DreamLayer timing", "ok": true, "detail": "2.83s vs 2.83s"},
+    {"check": "walk: keyframes at exact frame start times", "ok": true, "detail": "8 keys"},
+    {"check": "walk: loop flag follows atlas sampling", "ok": true, "detail": "sampling=cycle"},
+    {"check": "walk: character is 2 units tall", "ok": true, "detail": "2 units at 63 px/unit (atlas scale 0.3134)"},
+    {"check": "run_scaled: one sprite per atlas frame", "ok": true, "detail": "7 sprites / 7 frames"},
+    {"check": "run_scaled: sprite rects match atlas", "ok": true, "detail": "cell 128x128"},
+    {"check": "run_scaled: one shared ground pivot", "ok": true, "detail": "pivot 0.5,0"},
+    {"check": "run_scaled: clip length equals DreamLayer timing", "ok": true, "detail": "0.63s vs 0.63s"},
+    {"check": "run_scaled: keyframes at exact frame start times", "ok": true, "detail": "8 keys"},
+    {"check": "run_scaled: loop flag follows atlas sampling", "ok": true, "detail": "sampling=cycle"},
+    {"check": "run_scaled: character is 2 units tall", "ok": true, "detail": "2 units at 48 px/unit (atlas scale 0.2351)"},
+    {"check": "character prefab has an Animator with every clip", "ok": true, "detail": "2 clips"},
+    {"check": "summary", "ok": true, "detail": "0 failure(s)"}
+  ],
+  "unity": "2021.3.7f1"
+}
