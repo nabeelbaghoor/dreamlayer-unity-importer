@@ -1,0 +1,6 @@
+{
+  "name": "DreamLayer.SpriteImporter.Tests",
+  "references": ["DreamLayer.SpriteImporter.Editor"],
+  "includePlatforms": ["Editor"],
+  "autoReferenced": false
+}

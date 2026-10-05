@@ -1,0 +1,9 @@
+{
+  "name": "com.nabeelbaghoor.dreamlayer-sprite-importer",
+  "version": "0.1.0",
+  "displayName": "DreamLayer Sprite Importer",
+  "description": "Import DreamLayer sprite-sheet ZIPs as sliced sprites with ground-anchored pivots, frame-accurate AnimationClips, and one consistent character size across separate sprite jobs.",
+  "unity": "2021.3",
+  "author": { "name": "Nabeel Hassan", "url": "https://nabeelbaghoor.com" },
+  "keywords": ["dreamlayer", "sprite", "animation", "importer", "2d"]
+}
