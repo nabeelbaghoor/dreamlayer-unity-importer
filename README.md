@@ -22,7 +22,8 @@ show up as soon as a character has more than one animation:
 
 ## Use
 
-1. Install: Package Manager > Add package from git URL (or `file:` path to this folder).
+1. Install: **Window > Package Manager > + > Add package from git URL** and paste
+   `https://github.com/nabeelbaghoor/dreamlayer-unity-importer.git`
 2. Select a folder in the Project window, then **Assets > DreamLayer > Import Sprite Sheet ZIP...**
 3. Select the clips you imported for one character, then **Assets > DreamLayer > Build Character From Selected Clips**.
 
@@ -45,4 +46,4 @@ equal world height across sheets, and the generated Animator. Result on Unity 20
 **16/16 checks pass** (`Tests/Results/smoke-unity-2021.3.7f1.json`). Note: the two sheets were imported at
 63 and 48 px/unit and both come out exactly 2.0 units tall.
 
-Built by Nabeel Hassan while making *The Last Lamplighter* for the DreamLayer Jam.
+Built by Nabeel Hassan while making [*The Last Lamplighter*](https://github.com/nabeelbaghoor/the-last-lamplighter) for the DreamLayer Jam. MIT licensed.
