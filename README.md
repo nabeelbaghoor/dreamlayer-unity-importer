@@ -42,7 +42,7 @@ DreamLayerSpriteZipImporter.Import(runZip, "Assets/Characters/Wren",
 `Tests/Editor/ImporterSmokeTest.cs` imports DreamLayer's public sample walk cycle plus a second sheet of the
 same character at a different scale, then checks slicing, pivots, keyframe times, clip length, loop flags,
 equal world height across sheets, and the generated Animator. Result on Unity 2021.3.7f1:
-**15/15 checks pass** (`Tests/Results/smoke-unity-2021.3.7f1.json`). Note: the two sheets were imported at
+**16/16 checks pass** (`Tests/Results/smoke-unity-2021.3.7f1.json`). Note: the two sheets were imported at
 63 and 48 px/unit and both come out exactly 2.0 units tall.
 
 Built by Nabeel Hassan while making *The Last Lamplighter* for the DreamLayer Jam.
