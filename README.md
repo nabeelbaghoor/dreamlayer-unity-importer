@@ -17,6 +17,8 @@ show up as soon as a character has more than one animation:
 | **Each sprite job has its own scale**, so idle and run of the same character are different sizes and the character pops when animations switch | Picks a per-sheet pixels-per-unit from the measured body height, so every clip of a character is the same height in world units |
 | Frames whose background DreamLayer could not remove (`kept_background_frames`) would distort the measurements | Excluded from measurement |
 | Clips still need an Animator | **Assets > DreamLayer > Build Character From Selected Clips** creates a controller (idle as default state) and a prefab |
+| A sprite job opens with the reference pose easing into the action, so looping every frame hitches | `FirstFrame` / `FrameCount` build the clip from just the loop frames |
+| Exported durations follow the source video's sampling (a 12-frame run came back at 500 ms per frame) | `TargetSeconds` retimes the clip to game speed while keeping DreamLayer's relative frame timing |
 
 ## Use
 
@@ -29,6 +31,10 @@ Scripted:
 ```csharp
 var result = DreamLayerSpriteZipImporter.Import(zipPath, "Assets/Characters/Wren",
     new DreamLayerSpriteZipImporter.Options { CharacterHeightUnits = 2f });
+
+// A run cycle: skip the 3 intro frames and play the loop at game speed.
+DreamLayerSpriteZipImporter.Import(runZip, "Assets/Characters/Wren",
+    new DreamLayerSpriteZipImporter.Options { CharacterHeightUnits = 2f, FirstFrame = 3, TargetSeconds = 0.7f });
 ```
 
 ## Validation
